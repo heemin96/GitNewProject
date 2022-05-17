@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>   
+<link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&family=Lobster&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+	div.title{
+		border:1px solid gray;
+		height:50px;
+		line-height:50px;
+		font-size:30px;
+		font-family: 'Jua';
+		text-align: center;
+	}
+	
+	div.inform{
+		 border:2px solid orange;
+		 border-radius:20px;
+		 width:400px;
+		 height:500px;
+		 padding: 20px 20px;
+		 font-size:25px;
+		 font-family: 'Nanum Pen Script';
+		 margin-top:20px;
+	}
+	
+	div.list{
+		 border:2px solid orange;
+		 border-radius:20px;
+		 width:700px;
+		 height:500px;
+		 padding: 20px 20px;
+		 font-size:25px;
+		 font-family: 'Nanum Pen Script';
+		 margin-top:20px;
+	}
+		 /*반응형 css*/
+	 @media (max-width:500px){
+	 	div.title{
+	 		background-color: #afeeee;
+	 		color:black;
+		}
+		
+		div.inform{
+			float: none;
+			width: auto;
+			border: 5px groove gold;
+		}
+		div.list{
+			float: none;
+			width: auto;
+			border:5px dotted pink;
+		}
+	}
+	
+	 @media (min-width:600px) and (max-width:2000px) { 
+	 	div.title{
+	 		background-color: #ffb6c1;
+	 		color:green;
+	 		font-weight:bold;
+	 		font-size:35px;
+		}
+		
+		div.inform{
+			float: left;
+			border: 5px groove orange
+			
+		}
+		div.list{
+			float: right;
+			border:5px inset green;
+		}
+	}
+	
+	
+	td.cell img{
+		width:100px;
+		height: 110px;
+		border: 2px solid gray;
+		cursor: pointer;
+		
+	}
+	
+	td.cell img:hover{
+		box-shadow:5px 5px 5px gray;
+	}
+	
+	td.cell b{
+		padding-left:20px;
+	}
+</style>
+
+<script>
+	$(function(){
+		//처음시작시 목록 출력
+		list();
+		
+		//저장 버튼 이벤트
+		$("#btnsave").click(function(){
+			var data=$("#frm").serialize(); //폼안의 모든 데이타를 읽어온다 serialize 쓰려면 name 이 무조건 필요함
+			//alert(data);
+			$.ajax({
+				type:"get",
+				dataType:"html",
+				url:"ShopdataRead.jsp", //backend 역할
+				data:data,
+				success:function(){
+					//목록 다시 출력
+					list();
+					//입력값 지우기
+					$("#sangpum").val("");
+					$("#price").val("");
+					$("#cnt").val("1");
+				}
+			}); 
+			
+		});
+		
+		//사진 클릭시 상세페이지로 이동하는 이벤트 추가
+		 $(document).on("click","td.cell img",function(){
+			//img 태그에 있는 num 가져오기 
+			var num=$(this).attr("num");
+			//alert(num);
+			//다른 파일로 이동하면서 num 넘기기
+			location.href="ShopDetailPage.jsp?num="+num;
+			
+		});
+	});
+	
+	function list(){
+		$.ajax({
+			type:"get",
+			dataType:"json",
+			url:"ShopToJson.jsp",
+			success:function(data){
+				var s="<table class='table table-striped'>";
+				s+="<caption><b>총 "+$(data).length
+					+"개의 상품이 있습니다</b></caption>";
+				
+				//반복문
+				s+="<tr>";
+				$.each(data, function(i, elt){
+					s+="<td class='cell'>";
+					s+="<img src='"+elt.photo+"' num="+elt.num+">";
+					s+="<br><b>"+elt.sangpum+"</b><br>";
+					s+="<b style='color:red'>"+elt.price+"원</b>";
+					s+="</td>";
+					if((i+1)%4==0){
+						s+="</tr><tr>";
+					}
+				});
+				s+="</tr>";
+				s+="</table>";
+				$("div.list").html(s);
+				
+				
+			}
+		});
+		
+	}
+</script>
+</head>
+<body>
+<div class="title">
+	Shop Design
+</div>
+<div class="inform">
+	<h2>상품 등록</h2>
+	<form action="#" id="frm" class="form-inline">
+		<table class="table table-bordered" style="width: 300px;">
+		<tr>
+			<th bgcolor="pink" style="width: 100px;"> 상품명</th>
+			<td>
+			 	<input type="text" id="sangpum" name="sangpum" class="form-control">
+			</td>
+		</tr>
+
+		<tr>
+			<th bgcolor="pink" style="width: 1oopx;"> 상품사진</th>
+			<td>
+			<select id="photo" name="photo" class="form-control">
+			
+			<script>
+			var data=["라운드티","블랙원피스","화이프원피스",
+				"도트원피스","블랙조끼","꽃무늬원피스","프릴원피스",
+				"반팔원피스","레이스원피스","블랙코트","체크쿠션"];
+			
+			var s="";
+			for(i=0; i<=10; i++){
+				s+="<option value='../image2/"+(i+1)+".jpg'>"+data[i]+"</option>";
+				
+			}
+			
+			document.write(s);
+			</script>
+			</select>
+			<img src="" id="myphoto" width="60" height="60">
+			<script>
+				$("#myphoto").attr("src",$("#photo").val()); //1번째사진넣기
+				//변경시 이벤트
+				$("#photo").change(function(){
+					$("#myphoto").attr("src",$(this).val());	
+				});
+			</script>
+			</td>	
+		</tr>
+		<tr>
+			<th bgcolor="pink" style="width: 100px;"> 색 상 </th>
+			<td>
+				<input type="color" id="color" name="color"
+				class="form-control" value="#ffcccc"
+				style="width:80px;">
+		</tr>
+				<tr>
+			<th bgcolor="pink" style="width: 100px;"> 단 가 </th>
+			<td>
+				<input type="text" id="price" name="price"
+				class="form-control" >
+				
+		</tr>
+		
+				<tr>
+			<th bgcolor="pink" style="width: 100px;"> 수 량 </th>
+			<td>
+				<input type="number" id="cnt" name="cnt"
+				class="form-control" min="1" max="5" value="1">
+				
+		</tr>
+		
+				<tr>
+			<th bgcolor="pink" style="width: 100px;"> 입고 </th>
+			<td>
+				<input type="date" id="ipgoday" name="ipgoday"
+				class="form-control" value="2022-04-20">
+				
+		</tr>
+		<tr>
+			<td colspan="2" align="center"> 
+			<button type="button" class="btn btn-info"
+			style="width:130px;" id="btnsave">DB저장</button>
+			</td>
+		</tr>
+		</table>
+	</form>
+</div>
+<div class="list">
+	<h2>상품 목록</h2>
+</div>
+
+</body>
+</html>

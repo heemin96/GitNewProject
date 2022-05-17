@@ -1,0 +1,5 @@
+{"person":[
+	{"name":"이미자","photo":"../image/07.png","hp":"011-123-4567"},
+	{"name":"강동일","photo":"../image/08.png","hp":"011-676-4567"},
+	{"name":"손미정","photo":"../image/06.png","hp":"011-7899-4567"}
+],"color":["red","green","blue","orange"]}

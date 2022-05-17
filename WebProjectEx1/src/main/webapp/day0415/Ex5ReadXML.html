@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>   
+<link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&family=Lobster&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style type="text/css">
+	body *{
+		font-size:1.5rem;
+		font-family: 'Jua'
+		
+	}
+	
+	#out{
+		position:absolute;
+		left: 250px;
+		top:200px;
+		width: 800px;
+		height:500px;
+		border:2px solid orange;
+		padding : 20px 20px;
+		
+	}
+	
+	figure{
+		float:left;
+	}
+
+	figure img{
+		width: 120px;
+		height: 160px;
+	}
+	
+	figure figcaption{
+		font-size : 20px;
+		font-family : 'Gamja Flower';
+		margin-left: 20px;
+	}
+	
+</style>
+
+<script type="text/javascript">
+	$(function(){
+		$("#btn1").click(function(){
+			$.get("readxml1.xml" ,function(data){
+				//alert($(date).length); //1:list태그가 1이므로
+				//alert($(data).find("shop").length);//5
+				
+				var s="";
+				
+				$(data).find("shop").each(function(i, ele) {
+					var n=$(ele);
+					s+="상품번호 :" +n.attr("num") +"<br>";
+					s+="상품명 :" + n.find("sangpum").text()+"<br>";
+					s+="가격 : "+n.find("price").text()+"<br>";
+					var path=n.find("path").text();
+					s+="이미지경로 : "+ path + "<br>";
+					s+="<img src='"+path+"' width=120>";
+					s+="<hr>";
+					
+				
+					
+				});
+				
+				$("#out").html(s);
+				
+			});
+		});
+		
+		$("#btn2").click(function(){
+			$.get("readxml2.xml",function(data){
+				var s="";
+				$(data).find("doll").each(function(i,element){
+					var n=$(element);
+					s+="<figure>";
+					s+="<img src='"+n.find("photo"). text()+"'>";
+					s+="<figcaption>"+n.attr("title")+"</figcaption>";
+					s+="</figure>";
+					
+					
+				})
+				$("#out").html(s);
+				
+			});
+		
+		});
+		
+	});
+	
+
+</script>
+</head>
+<body>
+<img alt="" src="../image/12.jpg" width="200">
+
+<button type="button" class="btn btn-info" id="btn1"
+style="width : 130px;">XML읽기 #1</button>
+
+<button type="button" class="btn btn-info" id="btn2"
+style="width : 130px;">XML읽기 #2</button>
+
+<div id="out">111</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>   
+<link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&family=Jua&family=Lobster&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style type="text/css">
+	body *{
+		font-size:1.5rem;
+		font-family: 'Jua'
+		
+	}
+	
+	#out{
+		position:absolute;
+		left: 250px;
+		top:200px;
+		width: 430px;
+		height:270px;
+		border:2px solid black;
+		padding : 20px 20px;
+		
+	}
+	
+	figure{
+		float:left;
+	}
+
+	figure img{
+		width: 120px;
+		height: 160px;
+	}
+	
+	figure figcaption{
+		font-size : 20px;
+		font-family : 'Gamja Flower';
+		margin-left: 20px;
+	}
+	
+	#btn{
+		font-size:20px;
+		position:absolute;
+		left : 380px;
+		top : 100px;
+		background-color:black;
+		border:0;
+		outline:0;
+	}
+	
+</style>
+
+<script type="text/javascript">
+	$(function(){
+		$("#btn").click(function(){
+			$.get("readxml3.xml" ,function(data){
+				
+				var s="";
+				
+				$(data).find("person").each(function(i, element) {
+					var n=$(element);
+					s+="<figure>";
+					s+="<img src='"+n.find("photo"). text()+"'>";
+					s+="<figcaption>"+n.attr("name")+"</figcaption>";
+					s+="주소: "+n.find("addr").text()+"<br>";
+					s+="나이: "+n.attr("age");
+					s+="</figure>";
+				
+					
+				
+					
+				});
+				
+				$("#out").html(s);
+				
+			});
+		});
+		
+	});
+	
+
+</script>
+</head>
+<body>
+
+<button type="button" class="btn btn-info" id="btn"
+style="width : 130px;">XML읽기</button>
+
+
+<div id="out"></div>
+</body>
+</html>
